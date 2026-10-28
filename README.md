@@ -2,15 +2,27 @@
 
 Tab-to-complete for your whole computer. A translucent ghost cursor points at the next thing to click; you accept or reject with one key, and every keypress is logged as an eval.
 
-## Setup (one line)
+## Install
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/sagarvarma1/switchboard/main/install.sh | sh
+```
+
+Or download **GhostCursor.dmg** from the [latest release](https://github.com/sagarvarma1/switchboard/releases/latest). Requires macOS 14+ (Apple Silicon or Intel) and an Anthropic API key. The app opens a setup wizard on first launch.
+
+### Build from source
 
 ```sh
 git clone https://github.com/sagarvarma1/switchboard.git && cd switchboard && ./setup.sh
 ```
 
-This builds the app, installs it to `~/Applications`, and opens a setup wizard for your Anthropic API key and the Accessibility and Screen Recording permissions. Requires macOS 14+ and Xcode or the Command Line Tools (the script offers to install them).
+### Releasing
 
-To change things later, use the menu bar icon → **Setup…**. Run `./setup.sh` again after pulling new code.
+```sh
+./scripts/release.sh 0.2    # universal build → DMG + zip → GitHub Release (notarized if a Developer ID is set up)
+```
+
+The website lives in `docs/` and is served by GitHub Pages.
 
 ## Keys
 
