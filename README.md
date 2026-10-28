@@ -2,15 +2,15 @@
 
 Tab-to-complete for your whole computer. A translucent ghost cursor points at the next thing to click; you accept or reject with one key, and every keypress is logged as an eval.
 
-## Run
+## Setup (one line)
 
 ```sh
-mkdir -p ~/.ghostcursor && echo "sk-ant-..." > ~/.ghostcursor/api_key && chmod 600 ~/.ghostcursor/api_key
-./scripts/build-app.sh
-open build/GhostCursor.app
+git clone https://github.com/sagarvarma1/switchboard.git && cd switchboard && ./setup.sh
 ```
 
-The first time it runs, grant **Accessibility** and **Screen Recording** in System Settings → Privacy & Security, then relaunch.
+This builds the app, installs it to `~/Applications`, and opens a setup wizard for your Anthropic API key and the Accessibility and Screen Recording permissions. Requires macOS 14+ and Xcode or the Command Line Tools (the script offers to install them).
+
+To change things later, use the menu bar icon → **Setup…**. Run `./setup.sh` again after pulling new code.
 
 ## Keys
 

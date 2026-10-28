@@ -28,15 +28,9 @@ final class Predictor {
     - reason is under 12 words, written to the user (e.g. "Open the File menu to find Export").
     """
 
-    private var apiKey: String? {
-        if let k = ProcessInfo.processInfo.environment["ANTHROPIC_API_KEY"], !k.isEmpty { return k }
-        let url = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ghostcursor/api_key")
-        return (try? String(contentsOf: url, encoding: .utf8))?.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
     func predict(goal: String, history: [String], elements: [UIElement], screenshot: Data) async throws -> Prediction {
-        guard let key = apiKey, !key.isEmpty else {
-            throw err("No API key. Put it in ~/.ghostcursor/api_key or set ANTHROPIC_API_KEY.")
+        guard let key = APIKey.load() else {
+            throw err("No API key. Open 👻 → Setup… to add one.")
         }
 
         let historyText = history.isEmpty ? "(none yet)" : history.enumerated().map { "\($0 + 1). \($1)" }.joined(separator: "\n")

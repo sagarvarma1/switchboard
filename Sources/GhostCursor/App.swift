@@ -29,20 +29,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Hotkeys.shared.register(keyCode: Key.g, modifiers: Key.option) { [weak self] in self?.showGoal() }
         Hotkeys.shared.register(keyCode: Key.d, modifiers: Key.option) { [weak self] in self?.toggleDebug() }
 
-        requestPermissions()
+        if !SetupModel.isComplete || !UserDefaults.standard.bool(forKey: "onboarded") { showSetup() }
     }
 
-    // MARK: - Permissions
+    // MARK: - Setup
 
+    private let setupWindow = SetupWindow()
     private var hasAX: Bool { AXIsProcessTrusted() }
     private var hasScreen: Bool { CGPreflightScreenCaptureAccess() }
 
-    private func requestPermissions() {
-        if !hasAX {
-            let opts = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-            AXIsProcessTrustedWithOptions(opts)
+    @objc private func showSetup() {
+        setupWindow.show { [weak self] in
+            UserDefaults.standard.set(true, forKey: "onboarded")
+            self?.rebuildMenu()
+            self?.tryInFinder()
         }
-        if !hasScreen { CGRequestScreenCaptureAccess() }
+    }
+
+    /// First run: bring Finder forward and open the goal box with an example ready to go.
+    private func tryInFinder() {
+        NSWorkspace.shared.open(FileManager.default.homeDirectoryForCurrentUser)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
+            self?.goalPanel.present(prefill: "open the Downloads folder")
+        }
     }
 
     // MARK: - Menu
@@ -57,9 +66,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         menu.addItem(item(debugOn ? "Hide Element Boxes  (⌥D)" : "Show Element Boxes  (⌥D)", #selector(toggleDebug)))
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Accessibility: \(hasAX ? "✓" : "✗ (grant in System Settings)")", action: nil, keyEquivalent: "")
-        menu.addItem(withTitle: "Screen Recording: \(hasScreen ? "✓" : "✗ (grant, then relaunch)")", action: nil, keyEquivalent: "")
-        menu.addItem(item("Open Privacy Settings", #selector(openPrivacy)))
+        if !SetupModel.isComplete { menu.addItem(item("⚠︎ Finish Setup…", #selector(showSetup))) }
+        else { menu.addItem(item("Setup…", #selector(showSetup))) }
         menu.addItem(item("Reveal Eval Log", #selector(revealLog)))
         menu.addItem(.separator())
         menu.addItem(item("Quit", #selector(quit)))
@@ -100,10 +108,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let els = await Task.detached { AXScanner.scan(app: app) }.value
             if self.debugOn { self.overlay.debugBoxes = els }
         }
-    }
-
-    @objc private func openPrivacy() {
-        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
     }
 
     @objc private func revealLog() {

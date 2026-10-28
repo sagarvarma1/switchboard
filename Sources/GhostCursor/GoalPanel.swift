@@ -37,9 +37,9 @@ final class GoalPanel: NSObject, NSTextFieldDelegate {
         bg.addSubview(field)
     }
 
-    func present() {
+    func present(prefill: String = "") {
         previousApp = NSWorkspace.shared.frontmostApplication
-        field.stringValue = ""
+        field.stringValue = prefill
         if let screen = NSScreen.main {
             let f = screen.visibleFrame
             panel.setFrameOrigin(CGPoint(x: f.midX - panel.frame.width / 2, y: f.maxY - f.height * 0.28))
@@ -47,6 +47,7 @@ final class GoalPanel: NSObject, NSTextFieldDelegate {
         NSApp.activate(ignoringOtherApps: true)
         panel.makeKeyAndOrderFront(nil)
         panel.makeFirstResponder(field)
+        field.currentEditor()?.selectedRange = NSRange(location: prefill.utf16.count, length: 0)
     }
 
     private func dismiss() {
