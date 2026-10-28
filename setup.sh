@@ -7,7 +7,7 @@ cd "$(dirname "$0")"
 bold=$'\e[1m'; dim=$'\e[2m'; purple=$'\e[35m'; red=$'\e[31m'; reset=$'\e[0m'
 step() { print "${purple}▸${reset} ${bold}$1${reset}"; }
 
-print "\n${purple}👻 Ghost Cursor setup${reset}\n"
+print "\n${bold}Ghost Cursor${reset} ${dim}setup${reset}\n"
 
 # 1. Toolchain
 if ! xcrun --find swift >/dev/null 2>&1; then
@@ -34,4 +34,4 @@ cp -R build/GhostCursor.app ~/Applications/
 # 4. Launch: the app opens its setup wizard on first run
 step "Opening the setup wizard…"
 open ~/Applications/GhostCursor.app
-print "\n${bold}Done.${reset} Follow the wizard. Look for ${bold}👻${reset} in your menu bar afterwards.\n"
+print "\n${bold}Done.${reset} Follow the wizard. Ghost Cursor lives in your menu bar afterwards.\n"

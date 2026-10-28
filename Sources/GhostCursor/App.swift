@@ -6,6 +6,11 @@ import ApplicationServices
 final class AppDelegate: NSObject, NSApplicationDelegate {
     static func main() {
         let app = NSApplication.shared
+        if let i = CommandLine.arguments.firstIndex(of: "--render-setup"), i + 1 < CommandLine.arguments.count {
+            app.setActivationPolicy(.accessory)
+            MainActor.assumeIsolated { SetupSnapshots.render(to: CommandLine.arguments[i + 1]) }
+            return
+        }
         let delegate = AppDelegate()
         app.delegate = delegate
         app.setActivationPolicy(.accessory) // menu bar only, no Dock icon
@@ -23,7 +28,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         goalPanel = GoalPanel { [weak self] goal in self?.startSession(goal) }
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.title = "👻"
+        let icon = NSImage(systemSymbolName: "cursorarrow.motionlines", accessibilityDescription: "Ghost Cursor")
+        icon?.isTemplate = true
+        statusItem.button?.image = icon
         rebuildMenu()
 
         Hotkeys.shared.register(keyCode: Key.g, modifiers: Key.option) { [weak self] in self?.showGoal() }

@@ -30,7 +30,7 @@ final class Predictor {
 
     func predict(goal: String, history: [String], elements: [UIElement], screenshot: Data) async throws -> Prediction {
         guard let key = APIKey.load() else {
-            throw err("No API key. Open 👻 → Setup… to add one.")
+            throw err("No API key. Open the menu bar icon → Setup… to add one.")
         }
 
         let historyText = history.isEmpty ? "(none yet)" : history.enumerated().map { "\($0 + 1). \($1)" }.joined(separator: "\n")

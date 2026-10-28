@@ -115,7 +115,7 @@ final class OverlayView: NSView {
         guard o.mode != .hidden else { return }
         // Solid when sure, faint when guessing.
         let alpha = CGFloat(0.35 + 0.65 * max(0, min(1, o.confidence)))
-        let tint = NSColor.systemPurple
+        let tint = Theme.nsAccent
 
         if o.mode == .pointing, let t = o.target, screenAX.intersects(t) {
             let r = local(t).insetBy(dx: -4, dy: -4)

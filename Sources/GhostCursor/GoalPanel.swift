@@ -29,7 +29,7 @@ final class GoalPanel: NSObject, NSTextFieldDelegate {
 
         field.frame = CGRect(x: 18, y: 14, width: 584, height: 28)
         field.font = .systemFont(ofSize: 20)
-        field.placeholderString = "👻  What do you want to do?  (Esc to cancel)"
+        field.placeholderString = "What do you want to do?"
         field.isBordered = false
         field.drawsBackground = false
         field.focusRingType = .none
